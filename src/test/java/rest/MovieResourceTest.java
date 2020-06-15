@@ -133,9 +133,19 @@ public class MovieResourceTest {
     }
 
     @Test
+    public void testMovieV2Resource404() {
+
+        with()
+                .contentType("application/json")
+                .when().request("GET", "/movie-info-all-v2/doesn'texist").then() //get REQUEST
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode());
+    }
+
+    @Test
     public void testMovieCountResource() {
         login("admin", "test");
-        
+
         MovieDTO[] result
                 = with()
                         .contentType("application/json")
@@ -150,6 +160,19 @@ public class MovieResourceTest {
         assertEquals("Title 1", result[0].getTitle());
         assertEquals(2020, result[0].getYear());
         assertEquals(2, result[0].getNumberOfSearches());
+    }
+
+    @Test
+    public void testMovieCountResource404() {
+        login("admin", "test");
+
+        with()
+                .contentType("application/json")
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when().request("GET", "/movie-count/doesn'texist").then() //get REQUEST
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode());
     }
 
 }

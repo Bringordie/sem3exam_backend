@@ -2,16 +2,20 @@ package dtos.movierating;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.combined.DTOInterface;
+import errorhandling.NotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.HttpUtils;
 
 /**
  *
  * @author Frederik
  */
-public class MovieRatingDTO {
+public class MovieRatingDTO implements DTOInterface{
     private String title;
     private ImdbDTO imdb;
     private MetaCriticsDTO metacritics;
@@ -95,6 +99,28 @@ public class MovieRatingDTO {
     @Override
     public String toString() {
         return "MovieRatingDTO{" + "title=" + title + ", imdb=" + imdb + ", metacritics=" + metacritics + ", tomatoes=" + tomatoes + '}';
+    }
+
+    @Override
+    public void fetch(String url) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // load the properties file
+        InputStream sa = MovieRatingDTO.class.getResourceAsStream("/api_urls.properties");
+        Properties properties = new Properties();
+        properties.load(sa);
+        // assign properties parameters
+        String path = properties.getProperty("movieratings");
+        
+        String fetchdata = HttpUtils.fetchData(path+url+"/imt");
+        MovieRatingDTO movieDTO = gson.fromJson(fetchdata, MovieRatingDTO.class);
+        this.title = movieDTO.getTitle();
+        this.imdb = movieDTO.getImdb();
+        this.metacritics = movieDTO.getMetacritics();
+        this.tomatoes = movieDTO.getTomatoes();
+        } catch (IOException ex) {
+            Logger.getLogger(MovieRatingDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

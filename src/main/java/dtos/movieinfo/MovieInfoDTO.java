@@ -2,16 +2,20 @@ package dtos.movieinfo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.combined.DTOInterface;
+import dtos.movierating.MovieRatingDTO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.HttpUtils;
 
 /**
  *
  * @author Frederik
  */
-public class MovieInfoDTO {
+public class MovieInfoDTO implements DTOInterface{
     private String title;
     private int year;
     private String plot;
@@ -97,6 +101,30 @@ public class MovieInfoDTO {
     @Override
     public String toString() {
         return "MovieInfoDTO{" + "title=" + title + ", year=" + year + ", plot=" + plot + ", directors=" + directors + ", genres=" + genres + ", cast=" + cast + '}';
+    }
+
+    @Override
+    public void fetch(String url) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // load the properties file
+        InputStream sa = MovieInfoDTO.class.getResourceAsStream("/api_urls.properties");
+        Properties properties = new Properties();
+        properties.load(sa);
+        // assign properties parameters
+        String path = properties.getProperty("movieinfo");
+        
+        String fetchdata = HttpUtils.fetchData(path+url);
+        MovieInfoDTO movieDTO = gson.fromJson(fetchdata, MovieInfoDTO.class);
+        this.cast = movieDTO.getCast();
+        this.directors = movieDTO.getDirectors();
+        this.genres = movieDTO.getGenres();
+        this.plot = movieDTO.getPlot();
+        this.title = movieDTO.getTitle();
+        this.year = movieDTO.getYear();
+        } catch (IOException ex) {
+            Logger.getLogger(MovieRatingDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

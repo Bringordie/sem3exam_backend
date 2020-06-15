@@ -7,6 +7,12 @@ import dtos.movierating.MetaCriticsDTO;
 import dtos.movierating.TomatoesDTO;
 import dtos.movierating.MovieRatingDTO;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import dtos.combined.DTOInterface;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -161,11 +167,32 @@ public class CombineInfoPosterRaitingDTO {
         this.tomatoesCriticRatingNum = tomatoesCriticRatingNum;
     }
     
-    public CombineInfoPosterRaitingDTO fetchAllMovieDetails(String url) throws IOException {
+    public CombineInfoPosterRaitingDTO fetchAllMovieDetails(String url) throws IOException, InterruptedException {
         MovieInfoDTO movieInfoDTO = new MovieInfoDTO();
         MoviePosterDTO moviePosterDTO = new MoviePosterDTO();
         MovieRatingDTO movieRatingDTO = new MovieRatingDTO();
-        CombineInfoPosterRaitingDTO movieDTO = new CombineInfoPosterRaitingDTO(movieInfoDTO.fetchMovieIMDB(url), moviePosterDTO.fetchMovieIMDB(url), movieRatingDTO.fetchMovieRatingAll(url));
+        //CombineInfoPosterRaitingDTO movieDTO = new CombineInfoPosterRaitingDTO(movieInfoDTO.fetchMovieIMDB(url), moviePosterDTO.fetchMovieIMDB(url), movieRatingDTO.fetchMovieRatingAll(url));
+        
+        List<DTOInterface> dtos = new ArrayList();
+        dtos.add(movieInfoDTO);
+        dtos.add(moviePosterDTO);
+        dtos.add(movieRatingDTO);
+        
+        ExecutorService workingJack = Executors.newFixedThreadPool(5);
+        for (DTOInterface dto : dtos) {
+            Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    dto.fetch(url);
+                }
+            };
+            workingJack.submit(task);
+        }
+        workingJack.shutdown();
+        workingJack.awaitTermination(15, TimeUnit.SECONDS);
+        
+        CombineInfoPosterRaitingDTO movieDTO = new CombineInfoPosterRaitingDTO(movieInfoDTO, moviePosterDTO, movieRatingDTO);
+        
         return movieDTO;
     }
 
@@ -173,7 +200,6 @@ public class CombineInfoPosterRaitingDTO {
     public String toString() {
         return "CombineInfoPosterRaitingDTO{" + "title=" + title + ", year=" + year + ", plot=" + plot + ", directors=" + directors + ", genres=" + genres + ", cast=" + cast + ", poster=" + poster + ", imdbRating=" + imdbRating + ", imdbVotes=" + imdbVotes + ", metacriticsRating=" + metacriticsRating + ", tomatoesViewerRating=" + tomatoesViewerRating + ", tomatoesViewerRatingNum=" + tomatoesViewerRatingNum + ", tomatoesCriticRating=" + tomatoesCriticRating + ", tomatoesCriticRatingNum=" + tomatoesCriticRatingNum + '}';
     }
-
     
 
 }
