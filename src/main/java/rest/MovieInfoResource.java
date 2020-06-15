@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dtos.combine_info_poster.CombineInfoPosterDTO;
+import dtos.combined.CombineInfoPosterDTO;
 import errorhandling.AlreadyExistsException;
 import errorhandling.NotFoundException;
 import facades.UserFacade;

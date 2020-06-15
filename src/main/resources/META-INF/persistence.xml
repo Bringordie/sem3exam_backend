@@ -8,6 +8,9 @@
     <class>entities.ListItem</class>
     <class>entities.DiscountCode</class>
     <class>entities.SupportTicket</class>
+    <class>dtos.movierating.ImdbDTO</class>
+    <class>dtos.movierating.MetaCriticsDTO</class>
+    <class>dtos.movierating.CriticsDTO</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <!-- DO NOT remove the line below. It's not set by the  entityUtils.EMF_Creator -->

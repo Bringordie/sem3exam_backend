@@ -1,14 +1,8 @@
-package dtos.combine_info_poster;
+package dtos.combined;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dtos.moveimdb.MoviePosterDTO;
 import dtos.movieinfo.MovieInfoDTO;
-import errorhandling.NotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import utils.HttpUtils;
 
 /**
  *
