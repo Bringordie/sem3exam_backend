@@ -3,19 +3,15 @@ package facades;
 import dto.movie.MovieDTO;
 import entities.Movie;
 import errorhandling.NotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import org.hamcrest.MatcherAssert;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,7 +61,6 @@ public class FacadeTest {
         }
     }
 
-    //Something wrong with the iteration of number of searches
     @Test
     public void checkMovieTest() {
         Movie movie = new Movie("Title 12", 2020, "plot", "Directors", "genres", "cast", "poster");
@@ -75,6 +70,20 @@ public class FacadeTest {
 
         MovieDTO mdto2 = facade.checkMovie(movie);
         assertEquals(2, mdto2.getNumberOfSearches());
+        
+        MovieDTO mdto3 = facade.checkMovie(movie);
+        assertEquals(3, mdto3.getNumberOfSearches());
+        
+        MovieDTO mdto4 = facade.checkMovie(movie);
+        assertEquals(4, mdto4.getNumberOfSearches());
+        
+        
+        //Testing with a movie created in setUp
+        Movie movieAlreadyExists = new Movie("Title 1", 2020, "plot", "Directors", "genres", "cast", "poster");
+        
+        MovieDTO mdto5 = facade.checkMovie(movieAlreadyExists);
+        assertEquals(2, mdto5.getNumberOfSearches());
+        
 
     }
 
@@ -114,6 +123,25 @@ public class FacadeTest {
             fail("Expected a NotFoundException to be thrown");
         } catch (NotFoundException ex) {
             assertThat(ex.getMessage(), is("No movies with this actor was found."));
+        }  
+    }
+    
+    @Test
+    public void findMovieByTitle() throws NotFoundException {
+        List<MovieDTO> mlistdto = facade.findMovieByTitle("Title 1");
+        assertThat(mlistdto, hasSize(1));
+        
+        List<MovieDTO> mlistdto2 = facade.findMovieByTitle("Title");
+        assertThat(mlistdto2, hasSize(3));
+    }
+    
+    @Test
+    public void findMovieByTitleFail() throws NotFoundException {
+        try {
+            List<MovieDTO> mlistdto2 = facade.findMovieByTitle("thisnamedoesntexist");
+            fail("Expected a NotFoundException to be thrown");
+        } catch (NotFoundException ex) {
+            assertThat(ex.getMessage(), is("No movies with this title was found."));
         }  
     }
 

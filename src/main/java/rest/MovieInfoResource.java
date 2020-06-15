@@ -33,7 +33,7 @@ public class MovieInfoResource {
     @GET
     @Path("/{title}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String createUser(@PathParam("title") String title) throws IOException {
+    public String fetchSimpleMovie(@PathParam("title") String title) throws IOException {
         return GSON.toJson(combinedDTO.fetchMovieDetails(title));
         /*
         try {

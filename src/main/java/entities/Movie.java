@@ -31,7 +31,7 @@ public class Movie implements Serializable {
     private String genres;
     private String cast;
     private String poster;
-    private int numberOfSearches = 1;
+    private int numberOfSearches;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date updated;
 
@@ -46,7 +46,7 @@ public class Movie implements Serializable {
         this.genres = genres;
         this.cast = cast;
         this.poster = poster;
-        //this.numberOfSearches = 1;
+        this.numberOfSearches = 1;
         this.updated = new Date();
     }
     
@@ -58,8 +58,12 @@ public class Movie implements Serializable {
         this.genres = combinedDTO.getGenres();
         this.cast = combinedDTO.getCast();
         this.poster = combinedDTO.getPoster();
-        //this.numberOfSearches = 1;
+        this.numberOfSearches = 1;
         this.updated = new Date();
+    }
+    
+    public void updateNumberOfSearches() {
+        ++numberOfSearches;
     }
 
     public int getId() {

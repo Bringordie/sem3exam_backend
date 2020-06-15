@@ -3,7 +3,11 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.combined.CombineInfoPosterDTO;
+import errorhandling.NotFoundException;
+import facades.MovieFacade;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -11,18 +15,19 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
 
 //TOO DO ADD AUTHENTICATION
-@Path("movie-info")
+@Path("movie-count")
 public class MovieCountResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final CombineInfoPosterDTO combinedDTO = new CombineInfoPosterDTO();
+    private static final MovieFacade facade = new MovieFacade();
 
     @Context
     private UriInfo context;
@@ -33,15 +38,12 @@ public class MovieCountResource {
     @GET
     @Path("/{title}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String createUser(@PathParam("title") String title) throws IOException {
-        return GSON.toJson(combinedDTO.fetchMovieDetails(title));
-        /*
+    public String movieAndCount(@PathParam("title") String title) throws NotFoundException {
         try {
-            return GSON.toJson(combinedDTO.fetchMovieDetails(title));
+            return GSON.toJson(facade.findMovieByTitle(title));
         } catch (NotFoundException ex) {
-            throw new WebApplicationException(ex.getMessage(), 400);
-        }*/
+            throw new WebApplicationException(ex.getMessage(), 404);
+        }
     }
-
-        
+    
 }

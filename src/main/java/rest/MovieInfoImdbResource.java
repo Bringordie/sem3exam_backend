@@ -33,7 +33,7 @@ public class MovieInfoImdbResource {
     @GET
     @Path("/{title}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String createUser(@PathParam("title") String title) throws IOException {
+    public String fetchImdbMovie(@PathParam("title") String title) throws IOException {
             return GSON.toJson(combinedDTO.fetchImdbMovieDetails(title));
 
     }
