@@ -110,8 +110,6 @@ public class CombineInfoPosterImdbRaitingDTO {
     public void setImdbVotes(int imdbVotes) {
         this.imdbVotes = imdbVotes;
     }
-
-    
     
     public CombineInfoPosterImdbRaitingDTO fetchImdbMovieDetails(String url) throws IOException {
         MovieInfoDTO movieInfoDTO = new MovieInfoDTO();

@@ -18,7 +18,7 @@ import utils.EMF_Creator;
 
 //TOO DO ADD AUTHENTICATION
 @Path("movie-info")
-public class MovieInfoResource {
+public class MovieCountResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
