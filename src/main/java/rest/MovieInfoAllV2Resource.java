@@ -23,7 +23,6 @@ import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
 
-//TOO DO ADD AUTHENTICATION
 @Path("movie-info-all-v2")
 public class MovieInfoAllV2Resource {
 
@@ -42,7 +41,7 @@ public class MovieInfoAllV2Resource {
     @Produces(MediaType.APPLICATION_JSON)
     public String v2Movie(@PathParam("title") String title) throws NotFoundException {
         try {
-            return GSON.toJson(facade.findMovieByTitle(title));
+            return GSON.toJson(facade.findMovieByTitleV2(title));
         } catch (NotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), 404);
         }

@@ -16,7 +16,6 @@ import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
 
-//TOO DO ADD AUTHENTICATION
 @Path("movie-info")
 public class MovieInfoResource {
 

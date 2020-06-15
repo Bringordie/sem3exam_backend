@@ -7,7 +7,9 @@ import entities.Movie;
 import entities.Role;
 import entities.User;
 import io.restassured.RestAssured;
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.with;
+import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import java.net.URI;
 import javax.persistence.EntityManager;
@@ -37,6 +39,9 @@ public class MovieResourceTest {
     private static EntityManagerFactory emf;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static Movie m1, m2, m3;
+    private static User u1, u2;
+    private static Role r1, r2;
+    private static String securityToken;
 
     static HttpServer startServer() {
         ResourceConfig rc = ResourceConfig.forApplication(new ApplicationConfig());
@@ -60,6 +65,8 @@ public class MovieResourceTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
+            em.createNamedQuery("User.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Role.deleteAllRows").executeUpdate();
 
             m1 = new Movie("Title 1", 2020, "plot", "Directors", "genres", "castname1, castname2", "poster");
             m2 = new Movie("Title2", 2010, "plot", "Directors", "genres", "castname1, castname3", "poster");
@@ -69,11 +76,37 @@ public class MovieResourceTest {
             em.persist(m2);
             em.persist(m3);
 
+            u1 = new User("user", "test");
+            u2 = new User("admin", "test");
+
+            Role r1 = new Role("user");
+            Role r2 = new Role("admin");
+
+            u1.addRole(r1);
+            u2.addRole(r2);
+
+            em.persist(r1);
+            em.persist(r2);
+
+            em.persist(u1);
+            em.persist(u2);
+
             em.getTransaction().commit();
 
         } finally {
             em.close();
         }
+    }
+
+    private static void login(String role, String password) {
+        String json = String.format("{username: \"%s\", password: \"%s\"}", role, password);
+        securityToken = given()
+                .contentType("application/json")
+                .body(json)
+                .when().post("/login")
+                .then()
+                .extract().path("token");
+        System.out.println("TOKEN ---> " + securityToken);
     }
 
     @AfterAll
@@ -98,12 +131,16 @@ public class MovieResourceTest {
         assertEquals("Title2", result[0].getTitle());
         assertEquals(2010, result[0].getYear());
     }
-    
+
     @Test
     public void testMovieCountResource() {
+        login("admin", "test");
+        
         MovieDTO[] result
                 = with()
                         .contentType("application/json")
+                        .accept(ContentType.JSON)
+                        .header("x-access-token", securityToken)
                         .when().request("GET", "/movie-count/Title_1").then() //get REQUEST
                         .assertThat()
                         .statusCode(HttpStatus.OK_200.getStatusCode())

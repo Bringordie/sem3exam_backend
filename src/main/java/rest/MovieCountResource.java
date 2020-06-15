@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import errorhandling.NotFoundException;
 import facades.MovieFacade;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -17,7 +18,6 @@ import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
 
-//TOO DO ADD AUTHENTICATION
 @Path("movie-count")
 public class MovieCountResource {
 
@@ -33,6 +33,7 @@ public class MovieCountResource {
     
     @GET
     @Path("/{title}")
+    @RolesAllowed("admin")
     @Produces(MediaType.APPLICATION_JSON)
     public String movieAndCount(@PathParam("title") String title) throws NotFoundException {
         try {

@@ -1,6 +1,7 @@
 package facades;
 
 import dto.movie.MovieDTO;
+import dto.movie.MovieDTOV2;
 import entities.Movie;
 import errorhandling.NotFoundException;
 import java.util.List;
@@ -136,6 +137,25 @@ public class FacadeTest {
     public void findMovieByTitleFail() throws NotFoundException {
         try {
             List<MovieDTO> mlistdto2 = facade.findMovieByTitle("thisnamedoesntexist");
+            fail("Expected a NotFoundException to be thrown");
+        } catch (NotFoundException ex) {
+            assertThat(ex.getMessage(), is("No movies with this title was found."));
+        }  
+    }
+    
+    @Test
+    public void findMovieByTitleV2() throws NotFoundException {
+        List<MovieDTOV2> mlistdto = facade.findMovieByTitleV2("Title 1");
+        assertThat(mlistdto, hasSize(1));
+        
+        List<MovieDTOV2> mlistdto2 = facade.findMovieByTitleV2("Title");
+        assertThat(mlistdto2, hasSize(3));
+    }
+    
+    @Test
+    public void findMovieByTitleFailV2() throws NotFoundException {
+        try {
+            List<MovieDTOV2> mlistdto2 = facade.findMovieByTitleV2("thisnamedoesntexist");
             fail("Expected a NotFoundException to be thrown");
         } catch (NotFoundException ex) {
             assertThat(ex.getMessage(), is("No movies with this title was found."));

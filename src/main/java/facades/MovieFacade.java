@@ -1,6 +1,7 @@
 package facades;
 
 import dto.movie.MovieDTO;
+import dto.movie.MovieDTOV2;
 import entities.Movie;
 import errorhandling.AlreadyExistsException;
 import javax.persistence.EntityManager;
@@ -142,6 +143,36 @@ public class MovieFacade {
         } finally {
             em.close();
         }
+        return mdto;
+    }
+    
+    public List<MovieDTOV2> findMovieByTitleV2(String title) throws NotFoundException {
+        EntityManager em = emf.createEntityManager();
+        List<MovieDTOV2> mdto = new ArrayList();
+        try {
+            TypedQuery<Movie> m = em.createQuery("SELECT m FROM Movie m WHERE "
+                    + "m.title LIKE :title", Movie.class)
+                    .setParameter("title", "%" + title + "%");
+
+            List<Movie> mlist = m.getResultList();
+
+            if (!mlist.isEmpty()) {
+                for (Movie movie : mlist) {
+                    movie.updateNumberOfSearches();
+
+                    em.getTransaction().begin();
+                    em.persist(movie);
+                    em.getTransaction().commit();
+
+                    mdto.add(new MovieDTOV2(movie));
+                }
+            } else if (mlist.isEmpty()) {
+                throw new NotFoundException("No movies with this title was found.");
+            }
+        } finally {
+            em.close();
+        }
+        
         return mdto;
     }
 

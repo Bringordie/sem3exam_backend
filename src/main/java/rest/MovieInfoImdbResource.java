@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.combined.CombineInfoPosterImdbRaitingDTO;
 import java.io.IOException;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
 
-//TOO DO ADD AUTHENTICATION
 @Path("movie-info-imdb")
 public class MovieInfoImdbResource {
 
@@ -32,6 +32,7 @@ public class MovieInfoImdbResource {
     
     @GET
     @Path("/{title}")
+    @RolesAllowed("user")
     @Produces(MediaType.APPLICATION_JSON)
     public String fetchImdbMovie(@PathParam("title") String title) throws IOException {
             return GSON.toJson(combinedDTO.fetchImdbMovieDetails(title));
