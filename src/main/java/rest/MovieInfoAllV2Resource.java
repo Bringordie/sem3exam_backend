@@ -2,10 +2,12 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.movie.MovieDTO;
 import dtos.combined.CombineInfoPosterDTO;
 import errorhandling.NotFoundException;
 import facades.MovieFacade;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
@@ -27,7 +29,7 @@ public class MovieInfoAllV2Resource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final MovieFacade facade = new MovieFacade();
+    private static final MovieFacade facade = MovieFacade.getMovieFacade(EMF);
 
     @Context
     private UriInfo context;
@@ -45,5 +47,4 @@ public class MovieInfoAllV2Resource {
             throw new WebApplicationException(ex.getMessage(), 404);
         }
     }
-    
-}
+    }

@@ -2,12 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dtos.combined.CombineInfoPosterDTO;
 import errorhandling.NotFoundException;
 import facades.MovieFacade;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -27,7 +23,7 @@ public class MovieCountResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final MovieFacade facade = new MovieFacade();
+    private static final MovieFacade facade = MovieFacade.getMovieFacade(EMF);
 
     @Context
     private UriInfo context;

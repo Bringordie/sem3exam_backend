@@ -150,8 +150,8 @@ public class MovieFacade {
         MovieFacade mf = new MovieFacade();
 
         //mf.checkMovie(new Movie("Title 2", 2020, "plot", "Directors", "genres", "castname1, castname2", "poster"));
-        //mf.checkMovie(new Movie("Title 3", 2020, "plot", "Directors", "genres", "castname1, castname2", "poster"));
-        mf.findMovieByActor("castname1");
+        //mf.checkMovie(new Movie("test", 2020, "plot", "Directors", "genres", "castname1, castname2", "poster"));
+        System.out.println(mf.findMovieByTitle("test"));
     }
 
 }

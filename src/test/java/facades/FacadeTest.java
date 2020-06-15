@@ -24,10 +24,7 @@ public class FacadeTest {
     private static MovieFacade facade;
     private EntityManager em;
 
-    private Movie m1, m2, m3;
-
-    public FacadeTest() {
-    }
+    private static Movie m1, m2, m3;
 
     @BeforeAll
     public static void setUpClass() {
